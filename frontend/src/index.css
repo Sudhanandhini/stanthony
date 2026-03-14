@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply text-gray-800 font-medium text-[13px] hover:text-maroon transition-colors duration-200;
+  }
+  .section-title {
+    @apply text-2xl font-bold text-maroon tracking-wide uppercase mb-4;
+  }
+  .btn-admission {
+    @apply bg-purple-light text-white font-semibold px-5 py-2 rounded hover:bg-purple transition-colors duration-200 text-sm;
+  }
+  .page-hero {
+    @apply bg-gradient-to-r from-navy to-maroon text-white py-10 text-center;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+.marquee-text {
+  animation: marquee 25s linear infinite;
+  white-space: nowrap;
+}
+
+html { scroll-behavior: smooth; }

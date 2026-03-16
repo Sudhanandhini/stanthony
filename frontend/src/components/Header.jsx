@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X, ChevronDown } from 'lucide-react'
+import logo from '../assets/logofinak2.png'
 
 const navItems = [
   { label: 'HOME', path: '/' },
@@ -19,125 +20,181 @@ const navItems = [
   { label: 'PHOTO GALLERY', path: '/gallery' },
   { label: 'ACTIVITIES & EVENTS', path: '/activities' },
   { label: 'ANTHONIAN BULLETIN', path: '/bulletin' },
+  { label: 'ADMISSION', path: '/admission' },
 ]
 
+function ThreeLines({ align = 'left' }) {
+  return (
+    <div className={`flex flex-col gap-[3px] w-full ${align === 'right' ? 'items-end' : 'items-start'}`}>
+      <div className="h-[2px] w-3/4  bg-sci-green rounded-sm" />
+      <div className="h-[2px] w-1/2   bg-navy    rounded-sm" />
+      <div className="h-[2px] w-1/4   bg-maroon  rounded-sm" />
+    </div>
+  )
+}
+
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen]         = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(null)
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
-      {/* Top ticker bar */}
-      <div className="bg-maroon text-white text-xs py-1 overflow-hidden flex items-center">
-        <div className="flex-1 overflow-hidden">
-          <span className="marquee-text inline-block">
-            Welcome to St. Anthony's Institutions, Bengaluru &nbsp;|&nbsp; Recognized by Government of Karnataka &nbsp;|&nbsp; Admissions Open 2025–26 &nbsp;|&nbsp; Special Coaching for CET, NEET, JEE Mains &amp; Advanced
+    <header className="sticky top-0 z-50 bg-white shadow-md w-full">
+
+      {/* ══════════════════════════════════════
+          ROW 1 — Full width maroon ticker
+      ══════════════════════════════════════ */}
+      <div className="w-full bg-maroon text-white text-[11px] py-[5px] flex items-center overflow-hidden">
+        <div className="flex-1 overflow-hidden min-w-0">
+          <span className="marquee-text inline-block whitespace-nowrap font-medium tracking-wide">
+            Welcome to St. Anthony's Institutions, Bengaluru &nbsp;|&nbsp;
+            Recognized by Government of Karnataka &nbsp;|&nbsp;
+            Admissions Open 2025–26 &nbsp;|&nbsp;
+            Special Coaching for CET, NEET, JEE Mains &amp; Advanced
           </span>
         </div>
-        <div className="flex-shrink-0 bg-navy text-white px-4 py-1 font-semibold text-xs ml-2 whitespace-nowrap">
+        <div className="hidden sm:block flex-shrink-0 font-bold text-[11px] tracking-widest uppercase px-4 whitespace-nowrap">
           ST ANTHONY'S PU COLLEGE
         </div>
       </div>
 
-      {/* Logo + Nav */}
-      <div className="container mx-auto px-4 flex items-center justify-between py-2">
+      {/* ══════════════════════════════════════
+          ROW 2 — max-w-5xl centred container
+      ══════════════════════════════════════ */}
+      <div className="w-full container mx-auto flex items-stretch">
+
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-14 h-14 rounded-full bg-navy flex items-center justify-center overflow-hidden border-2 border-maroon">
-            <div className="text-center">
-              <div className="text-white text-[7px] font-bold leading-tight">ST.</div>
-              <div className="text-white text-[8px] font-bold leading-tight">ANTHONY'S</div>
-              <div className="text-teal text-[5px] leading-tight">✦ ✦ ✦</div>
-            </div>
-          </div>
-          <div>
-            <div className="text-maroon font-bold text-xl leading-tight tracking-wide">ST. ANTHONY'S</div>
-            <div className="text-navy font-bold text-lg leading-tight tracking-widest">INSTITUTIONS</div>
-            <div className="text-gray-500 text-[10px] tracking-wider">KENGERI, BENGALURU</div>
-            <div className="text-maroon text-[9px] italic">Capuchin Franciscan Fathers</div>
-          </div>
+        <Link to="/" className="flex items-center flex-shrink-0 px-3 py-2">
+          <img
+            src={logo}
+            alt="St. Anthony's Institutions"
+            className=" w-[300px] h-auto object-contain"
+          />
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-          {navItems.map((item) =>
-            item.dropdown ? (
-              <div key={item.label} className="relative group">
-                <button
-                  className="nav-link flex items-center gap-1 px-1 py-2 text-[12px] font-semibold hover:text-maroon"
+        {/* Right column */}
+        <div className="flex flex-col flex-1 min-w-0">
+
+          {/* Sub-row A — lines + college name (hidden on mobile) */}
+          <div className="flex items-center pt-2 pb-1 gap-2">
+            <div className="flex-1 min-w-0">
+              <ThreeLines align="left" />
+            </div>
+            <span className="hidden lg:block flex-shrink-0 font-extrabold text-navy text-[16px] tracking-wider uppercase whitespace-nowrap pr-1">
+              ST ANTHONY'S PU COLLEGE
+            </span>
+          </div>
+
+          {/* Sub-row B — desktop nav */}
+          <nav className="hidden lg:flex items-stretch flex-1">
+            {navItems.map((item) =>
+              item.dropdown ? (
+                <div
+                  key={item.label}
+                  className="relative"
                   onMouseEnter={() => setDropdownOpen(item.label)}
                   onMouseLeave={() => setDropdownOpen(null)}
+                >
+                  <button
+                    className={`flex items-center gap-[3px] px-[7px] h-full
+                      text-[16px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
+                      ${dropdownOpen === item.label
+                        ? 'bg-purple text-white'
+                        : 'text-gray-800 hover:bg-purple hover:text-white'
+                      }`}
+                  >
+                    {item.label}
+                    <ChevronDown size={10} />
+                  </button>
+
+                  <div
+                    className={`absolute top-full left-0 bg-teal min-w-[200px] z-50 shadow-xl
+                      transition-all duration-200
+                      ${dropdownOpen === item.label
+                        ? 'opacity-100 visible translate-y-0'
+                        : 'opacity-0 invisible -translate-y-1'
+                      }`}
+                    onMouseEnter={() => setDropdownOpen(item.label)}
+                    onMouseLeave={() => setDropdownOpen(null)}
+                  >
+                    {item.dropdown.map((sub, i) => (
+                      <NavLink
+                        key={sub.path}
+                        to={sub.path}
+                        className={`block px-5 py-[10px] text-[16px] font-semibold text-white
+                          hover:bg-teal-dark transition-colors
+                          ${i < item.dropdown.length - 1 ? 'border-b border-white/20' : ''}`}
+                      >
+                        {sub.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <NavLink
+                  key={item.label}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center px-[7px]
+                    text-[16px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
+                    ${isActive
+                      ? 'bg-purple text-white'
+                      : 'text-gray-800 hover:bg-purple hover:text-white'
+                    }`
+                  }
+                  end={item.path === '/'}
                 >
                   {item.label}
-                  <ChevronDown size={12} />
-                </button>
-                <div
-                  className={`absolute top-full left-0 bg-white shadow-xl border-t-2 border-maroon min-w-[180px] z-50 transition-all duration-200 ${
-                    dropdownOpen === item.label ? 'opacity-100 visible' : 'opacity-0 invisible'
-                  }`}
-                  onMouseEnter={() => setDropdownOpen(item.label)}
-                  onMouseLeave={() => setDropdownOpen(null)}
-                >
-                  {item.dropdown.map((sub) => (
-                    <NavLink
-                      key={sub.path}
-                      to={sub.path}
-                      className="block px-4 py-2 text-xs text-gray-700 hover:bg-maroon hover:text-white transition-colors"
-                    >
-                      {sub.label}
-                    </NavLink>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <NavLink
-                key={item.label}
-                to={item.path}
-                className={({ isActive }) =>
-                  `px-1 py-2 text-[12px] font-semibold transition-colors duration-200 ${
-                    isActive ? 'text-maroon border-b-2 border-maroon' : 'text-gray-800 hover:text-maroon'
-                  }`
-                }
-                end={item.path === '/'}
-              >
-                {item.label}
-              </NavLink>
-            )
-          )}
-          <Link to="/admission" className="ml-2 bg-purple-light text-white font-bold text-[12px] px-4 py-2 rounded hover:bg-purple transition-colors">
-            ADMISSION
-          </Link>
-        </nav>
+                </NavLink>
+              )
+            )}
+          </nav>
+
+          {/* Sub-row C — 3 lines right-aligned */}
+          <div className="pt-1 pb-2">
+            <ThreeLines align="right" />
+          </div>
+
+        </div>
 
         {/* Mobile hamburger */}
-        <button className="lg:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="lg:hidden flex-shrink-0 px-3 self-center text-maroon"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Decorative line */}
-      <div className="h-[3px] bg-gradient-to-r from-maroon via-navy to-teal" />
-
-      {/* Mobile Nav */}
+      {/* ══════════════════════════════════════
+          MOBILE NAV
+      ══════════════════════════════════════ */}
       {menuOpen && (
-        <div className="lg:hidden bg-white border-t shadow-lg">
+        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           {navItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              className="block px-4 py-3 text-sm font-semibold text-gray-800 border-b hover:bg-gray-50 hover:text-maroon"
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </NavLink>
+            <div key={item.label}>
+              <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                  `block px-5 py-3 text-sm font-bold border-b border-gray-100 transition-colors
+                  ${isActive ? 'bg-purple text-white' : 'text-gray-800 hover:bg-purple hover:text-white'}`
+                }
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+              {item.dropdown?.map((sub) => (
+                <NavLink
+                  key={sub.path}
+                  to={sub.path}
+                  className="block pl-9 pr-5 py-2 text-sm font-semibold border-b border-gray-100 bg-teal/10 text-gray-700 hover:bg-teal hover:text-white transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {sub.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
-          <Link
-            to="/admission"
-            className="block px-4 py-3 text-sm font-bold text-white bg-purple-light m-3 rounded text-center"
-            onClick={() => setMenuOpen(false)}
-          >
-            ADMISSION
-          </Link>
         </div>
       )}
     </header>

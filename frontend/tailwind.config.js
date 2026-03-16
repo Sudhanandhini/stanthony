@@ -6,7 +6,7 @@ export default {
       colors: {
         maroon: '#8B1A1A',
         'maroon-dark': '#6B1212',
-        navy: '#212db4',
+        navy: '#1a3974',
         'nav-blue': '#1565C0',
         teal: '#00BCD4',
         'teal-dark': '#0097A7',

@@ -3,9 +3,9 @@ import { ChevronRight } from 'lucide-react'
 
 const quickLinks = [
   { label: 'Home', path: '/', color: 'bg-quick-purple' },
-  { label: 'St Anthony Global Academy', path: '/about', color: 'bg-quick-purple' },
+  { label: 'St Anthony Global Academy', path: 'https://stanthonyglobalacademy.com', color: 'bg-quick-purple' },
   { label: 'PUC', path: '/courses', color: 'bg-quick-orange' },
-  { label: 'Degree', path: '/about', color: 'bg-quick-pink' },
+  { label: 'Degree', path: 'https://stanthonys.edu.in/', color: 'bg-quick-pink' },
   { label: 'Contact', path: '/contact', color: 'bg-quick-pink' },
 ]
 
@@ -131,7 +131,7 @@ export default function Footer() {
                 <p className="text-gray-700 text-xs leading-relaxed text-justify">
                   Darshan College established in the year 2002 and situated along the Mysore Road in Kengeri, promotes higher learning in humanities and strives to create a society...
                 </p>
-                <Link to="/about" className="text-blue-700 font-bold text-xs mt-3 inline-block hover:underline">More</Link>
+                <Link to="/about/institutions" className="text-blue-700 font-bold text-xs mt-3 inline-block hover:underline">More</Link>
               </div>
             </div>
 
@@ -142,7 +142,7 @@ export default function Footer() {
                 <p className="text-gray-700 text-xs leading-relaxed text-justify">
                   There is only one Education, and it has only one goal: the freedom of the mind. Anything that needs an adjective, be it civics education, or socialist education, or Christian education, or whatever-you-like education...
                 </p>
-                <Link to="/about" className="text-blue-700 font-bold text-xs mt-3 inline-block hover:underline">More</Link>
+                <Link to="https://www.stanthonyscollege.edu.in/about-trust/" className="text-blue-700 font-bold text-xs mt-3 inline-block hover:underline">More</Link>
               </div>
             </div>
 
@@ -180,11 +180,14 @@ export default function Footer() {
       </div>
 
       {/* Bottom copyright */}
-      <div className="bg-navy text-white text-center text-xs py-3 grid grid-col">
+      
+      <div className='bg-navy '>
+      <div className="container mx-auto px-4 text-gray-400 text-xs py-3 px-6 flex flex-col md:flex-row items-center justify-between gap-1">
         <p>© {new Date().getFullYear()} St. Anthony's Institutions, Kengeri, Bengaluru. All Rights Reserved.</p>
-        <p className="text-gray-400 mt-0.5">
-          Developed by <a>Sunsys Technologies </a>
+        <p className="text-gray-400">
+          Developed by <a href="https://www.sunsys.in/">Sunsys Technologies</a>
         </p>
+      </div>
       </div>
     </footer>
   )

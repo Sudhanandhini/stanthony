@@ -1,158 +1,109 @@
 // src/pages/about/PresidentsMessage.jsx
-import PageHero from '../components/PageHero'
+import ban14 from '../assets/04-1-2.jpg'
+import prin  from '../assets/president.webp'
 
 export default function PresidentsMessage() {
   return (
     <div>
-      <PageHero
-        title="PRESIDENT'S MESSAGE"
-        breadcrumb={['Home', 'About Us', "President's Message"]}
-      />
 
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4 max-w-5xl">
+      {/* ── Banner ── */}
+      <div className="w-full overflow-hidden" style={{ maxHeight: 300 }}>
+        <img
+          src={ban14}
+          alt="St. Anthony's Institutions"
+          className="w-full object-cover object-center"
+          style={{ display: 'block' }}
+        />
+      </div>
 
-          <div className="flex flex-col lg:flex-row gap-10 items-start">
+     
 
-            {/* Photo card */}
-            <div className="lg:w-64 flex-shrink-0 mx-auto lg:mx-0">
-              <div className="bg-[#1a3974] rounded-xl overflow-hidden shadow-lg">
-                {/* Photo */}
-                <div className="bg-gray-200 flex items-center justify-center" style={{ height: 280 }}>
-                  <img
-                    src="/images/president.jpg"
-                    alt="Rev. Fr. Robin Victor D'Souza"
-                    className="w-full h-full object-cover object-top"
-                    onError={(e) => {
-                      e.target.style.display = 'none'
-                      e.target.parentNode.innerHTML = `
-                        <div style="padding:40px;text-align:center;color:#999">
-                          <div style="font-size:72px">👤</div>
-                        </div>`
-                    }}
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <p className="text-white font-bold text-sm leading-snug">
-                    Rev. Fr. Robin Victor D'Souza
-                  </p>
-                  <p className="text-teal-300 text-xs mt-1">
-                    Director, St. Anthony's Institutions
-                  </p>
-                  <p className="text-blue-200 text-[11px] mt-0.5">
-                    Capuchin Franciscan Fathers
-                  </p>
-                </div>
-              </div>
+      {/* ── Content ── */}
+      <section className="py-10 bg-white">
+        <div className="max-w-6xl mx-auto px-4 max-w-4xl">
+
+          {/* Heading */}
+          <h2 className="font-bold text-[15px] text-gray-900 mb-5 uppercase tracking-wide">
+            PRESIDENT'S MESSAGE
+          </h2>
+
+          {/* First block: italic paragraph + float-right photo */}
+          <div className="mb-6 clearfix">
+
+            {/* Photo — floats right on desktop, stacks on mobile */}
+            <div
+              className="float-none w-full mb-4 sm:float-right sm:w-80 sm:ml-8 sm:mb-4 overflow-hidden shadow"
+            >
+              <img
+                src={prin}
+                alt="Rev. Fr. Robin Victor D'souza"
+                className="w-full h-full object-cover"
+                style={{ maxHeight: 340, display: 'block' }}
+                onError={(e) => {
+                  e.target.style.display = 'none'
+                  e.target.parentNode.style.background = '#ddd'
+                  e.target.parentNode.innerHTML =
+                    '<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px">Photo</div>'
+                }}
+              />
             </div>
 
-            {/* Message */}
-            <div className="flex-1">
-              <p className="text-[#0288d1] font-extrabold text-sm uppercase tracking-widest mb-1">
-                A Message from the Director
-              </p>
-              <h2 className="text-2xl font-bold text-navy mb-1">
-                Rev. Fr. Robin Victor D'Souza
-              </h2>
-              <p className="text-gray-500 text-sm italic mb-6">
-                Director, St. Anthony's Institutions, Kengeri, Bengaluru
-              </p>
+            {/* First italic paragraph (sits beside photo) */}
+            <p
+              className="text-[13.5px] text-gray-700 leading-7 text-justify italic"
+            >
+              Welcome to St. Anthony's Institutions run by the Capuchin Franciscan
+              Fathers. Hope you will find all that you seek in pursuit of higher learning
+              in the abode of St. Anthony's PU College and Darshan College. As you glance
+              through this prospectus it will open up new horizons of your dreams and
+              visions. As you cross the threshold, may the new portals of our College offer
+              you an experience which goes beyond mere learning. We are sure that you will
+              push the boundaries and explore the possibilities so that you tell in a
+              determined manner to yourself that you are born to win and born to excel as
+              the future leader of our Nation and of the Globe. The Education and holistic
+              formation imparted in St. Anthony's PU College and Darshan College will
+              mold you to achieve your goal on the right path persevering in faith.
+            </p>
+          </div>
 
-              <div className="space-y-4 text-gray-700 text-sm leading-7 text-justify">
-                <p>
-                  Dear Students, Parents, and Well-wishers,
-                </p>
-                <p>
-                  It gives me great pleasure to welcome you to St. Anthony's Institutions – a vibrant
-                  community of learning, faith and service. Our institution was born out of a dream to
-                  provide quality education rooted in Franciscan values to the young people of Kengeri
-                  and beyond.
-                </p>
-                <p>
-                  Since our establishment in 2009, we have remained committed to our motto of
-                  <em> "To Educate... To Empower... To Explore... To Excel..."</em> We believe that
-                  education is not merely the transfer of knowledge, but the formation of the whole
-                  person – intellectually, morally, spiritually and socially.
-                </p>
-                <p>
-                  Our qualified and dedicated faculty, modern infrastructure, and holistic programmes
-                  ensure that every student receives the best possible foundation for their future. We
-                  take pride in the achievements of our students in academics, sports, arts and
-                  competitive examinations like CET, NEET and JEE.
-                </p>
-                <p>
-                  I invite you to be part of this great family. Together, let us build a future where
-                  each young person discovers their potential, contributes to society, and lives a life
-                  of purpose and integrity.
-                </p>
-                <p>
-                  God bless you all.
-                </p>
+          {/* Second paragraph — full width, below float */}
+          <div style={{ clear: 'both' }}>
+            <p className="text-[13.5px] text-gray-700 leading-7 text-justify italic mb-8">
+              As you choose to walk your journey of life in our institution, which has a
+              dynamic ambiance and a healthy environment, be constructive, be creative and
+              be committed, for you will see yourself transformed with a new learning
+              experience and develop your progressive skills. Our highly educated,
+              experienced and motivated staff along with committed team of management will
+              implement the most validated methods and means of Teaching-Learning Process
+              to provide the quality education and academic excellence to be at par with
+              our motto:{' '}
+              <strong className="not-italic">
+                "to educate, to empower, to explore and to excel."
+              </strong>{' '}
+              Be inspired, be imaginative, be innovative at St. Anthony's PU College and
+              Darshan College. With best wishes &amp; warm welcome!
+            </p>
 
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <p className="font-bold text-navy">Rev. Fr. Robin Victor D'Souza</p>
-                  <p className="text-[#0288d1] text-xs mt-0.5">Director, St. Anthony's Institutions</p>
-                  <p className="text-gray-500 text-xs">Capuchin Franciscan Fathers, Holy Trinity Province</p>
-                </div>
-              </div>
+            {/* Spacer */}
+            <div className="mb-6" />
+
+            {/* Signature */}
+            <div>
+              <p className="font-bold text-[14px] text-gray-900 leading-snug">
+                Rev. Fr. Robin Victor D'souza, OFM Cap
+              </p>
+              <p className="font-bold text-[14px] text-gray-900 leading-snug">
+                President, CEB
+              </p>
+              <p className="font-bold text-[14px] text-gray-900 leading-snug">
+                St. Anthony's Institutions
+              </p>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* Principal's Message */}
-      <section className="py-10 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h3 className="text-xl font-bold text-navy mb-8 text-center">
-            Principal's Message
-          </h3>
-          <div className="flex flex-col lg:flex-row gap-10 items-start">
-            <div className="flex-1 space-y-4 text-gray-700 text-sm leading-7 text-justify">
-              <p>Dear Students and Parents,</p>
-              <p>
-                Welcome to St. Anthony's Pre-University College. As Principal, I am proud to lead an
-                institution that stands for excellence, integrity and character. Our college is not
-                just a place of learning – it is a home where young minds are nurtured, inspired and
-                equipped for the challenges of tomorrow.
-              </p>
-              <p>
-                We have a team of highly qualified and committed teachers who invest not only in the
-                academic growth of students, but also in their overall personality development. Our
-                results in Board examinations and competitive tests like CET, NEET and JEE stand
-                testimony to the hard work of our students and faculty alike.
-              </p>
-              <p>
-                I encourage every student to make the most of the opportunities available here –
-                academic, co-curricular and spiritual. Remember, success belongs to those who dream
-                big and work with discipline and determination.
-              </p>
-              <div className="pt-3 border-t border-gray-200">
-                <p className="font-bold text-navy">Rev. Fr. Roshan Rosario</p>
-                <p className="text-[#0288d1] text-xs mt-0.5">
-                  Principal, St. Anthony's Pre-University College
-                </p>
-              </div>
-            </div>
-
-            {/* Quote highlight */}
-            <div className="lg:w-64 flex-shrink-0">
-              <div
-                className="rounded-xl p-6 text-white relative overflow-hidden"
-                style={{ background: '#1a3974' }}
-              >
-                <span
-                  className="absolute top-2 left-3 text-7xl font-serif leading-none"
-                  style={{ color: 'rgba(255,255,255,0.1)', fontFamily: 'Georgia, serif' }}
-                >"</span>
-                <p className="text-blue-100 text-sm leading-6 italic relative z-10 mt-4">
-                  "Education is not the filling of a pail, but the lighting of a fire."
-                </p>
-                <p className="text-teal-300 text-xs font-bold mt-4">— W.B. Yeats</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

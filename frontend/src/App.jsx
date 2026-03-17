@@ -25,6 +25,8 @@ import GlobalAcademy from './pages/Globalacademy'
 import PUC           from './pages/Puc'
 import Degree        from './pages/Degree'
 
+import Othercourses from './pages/Othercourses'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -55,6 +57,8 @@ export default function App() {
             <Route path="/courses/global-academy" element={<GlobalAcademy />} />
             <Route path="/courses/puc"            element={<PUC />} />
             <Route path="/courses/degree"         element={<Degree />} />
+
+              <Route path="/courses/other-courses"   element={<Othercourses />} />
 
           </Routes>
         </main>

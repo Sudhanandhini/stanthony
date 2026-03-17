@@ -1,5 +1,5 @@
 // src/pages/about/AboutTrust.jsx
-import PageHero from '../components/PageHero'
+import ban13 from '../assets/trust2.0.jpg'
 
 const leaders = [
   {
@@ -35,11 +35,14 @@ const leaders = [
 export default function AboutTrust() {
   return (
     <div>
-      <PageHero title="ABOUT TRUST" breadcrumb={['Home', 'About Us', 'About Trust']} />
-
+   
+           <div className=" text-center">
+              <img src={ban13} />
+               </div>
+   
       {/* Intro */}
       <section className="py-12 bg-white">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="max-w-6xl mx-auto px-4 max-w-5xl">
           <p className="text-[#0288d1] font-extrabold text-sm uppercase tracking-widest mb-1">
             About the Trust
           </p>
@@ -51,21 +54,28 @@ export default function AboutTrust() {
           <div className="flex flex-col lg:flex-row gap-10 items-start">
             <div className="flex-1 space-y-4">
               <p className="text-gray-700 text-sm leading-7 text-justify">
-                St. Anthony's Institutions is managed by the Capuchin Franciscan Fathers of the Holy
-                Trinity Province of Karnataka. The Capuchin Franciscan Order is a religious order within
-                the Catholic Church, following the way of life of St. Francis of Assisi. The Order is
-                known for its simplicity, humility, and service to the poor and marginalized.
+                There is only one Education, and it has only one goal: the freedom of the mind. Anything that needs an adjective, be it civics education, or socialist education, or Christian education, or whatever-you-like education, is not education in the general sense, as it can have different goals. The very existence of modified "educations" is testimony to the fact that their proponents cannot bring about what they want in a mind that is free. An "education" that cannot do its work in a free mind, and so must "teach" by homily and precept in the service of these feelings and attitudes and beliefs rather than those, is pure and unmistakable tyranny - Richard Mitchell,
+
+
               </p>
               <p className="text-gray-700 text-sm leading-7 text-justify">
-                The Holy Trinity Province of Karnataka was formally erected as an independent Province
-                on 8 December 1992. With its headquarters in Bengaluru, the Province engages in various
-                apostolic works including education, parish ministry, missions, social work and healthcare.
+              
+
+The words of the underground Grammarian, Mr. Richard Mitchell is in place and power in it. The inspiring and outgoing desire, the burning bush flame and the heart throbbing impulses of the concerned and to be corned of the periphery or the cry of the outer ring of the society was an awakening timely call to the capuchins of the Holy Trinity Province to hanker into their boat into the education field. The fruit of the long awaited wish of the millions of the society and the distant dream of our elders emerged in the four walls of the schools. The beauty and the mind meet in the capuchin education board.
               </p>
+
+            <p className="text-[#0288d1] font-extrabold text-sm uppercase tracking-widest mb-1">
+            motto
+          </p>
               <p className="text-gray-700 text-sm leading-7 text-justify">
-                In the field of education, the Province runs several institutions across Karnataka and
-                beyond, dedicated to providing quality education inspired by Franciscan values – love,
-                peace, simplicity and care for creation. St. Anthony's Institutions in Kengeri is a
-                flagship educational initiative of the Province.
+              The Motto of Capuchin Education Board (CEB) is: jnanenaiva vimuktih: "Indeed, Liberation is through enlightenment". As the temporal, mundane existence is characterized by the experience of bondage (samsara) ignorance (avidya) and pain (duhkha), the eminent sages and prophets have propagated means to alleviate oneself from tha above negative experiences of human existence, and fill life with hope and joy. The fullness of existence is characterised by Liberation attained through true knowledge, which is an experience of enlightenment.
+              </p>
+
+                <p className="text-[#0288d1] font-extrabold text-sm uppercase tracking-widest mb-1">
+        The Function of Capuchin Education Board:
+          </p>
+              <p className="text-gray-700 text-sm leading-7 text-justify">
+             The Capuchin Education Board functions under the supervision of Provincial Minister and his Definitory. The Education ministry of the Province is teamwork of all the friars involved in the ministry. The ministry constitutes one single unit with one goal, one ideal and one system of organisation that goes to make one single tradition.
               </p>
             </div>
 
@@ -89,7 +99,7 @@ export default function AboutTrust() {
 
       {/* Leadership */}
       <section className="py-10 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="max-w-6xl mx-auto px-4 max-w-5xl">
           <h3 className="text-xl font-bold text-navy mb-6 text-center">Our Leadership</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {leaders.map((l) => (
@@ -115,8 +125,8 @@ export default function AboutTrust() {
       </section>
 
       {/* Stats strip */}
-      <section className="py-8 bg-maroon">
-        <div className="container mx-auto px-4 max-w-4xl">
+      {/* <section className="py-8 bg-maroon">
+        <div className="max-w-6xl mx-auto px-4 max-w-4xl">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-white text-center">
             {[
               { v: '1992', l: 'Province Erected' },
@@ -131,7 +141,7 @@ export default function AboutTrust() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   )
 }

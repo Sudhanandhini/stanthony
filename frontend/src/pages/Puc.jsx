@@ -1,133 +1,271 @@
 // src/pages/courses/PUC.jsx
 import { Link } from 'react-router-dom'
-import PageHero from '../components/PageHero'
+import ban23 from '../assets/puc.jpg'
+import banner1 from "../assets/PUC-Brochure.jpg"
 
-const streams = [
-  {
-    name: 'PU Science',
-    path: '/courses/science',
-    color: '#0288d1',
-    icon: '🔬',
-    subjects: ['Physics', 'Chemistry', 'Mathematics / Biology', 'English / Kannada / Hindi'],
-    desc: 'Ideal for students aiming for Engineering (CET / JEE) or Medical (NEET). Specialised coaching for competitive exams is integrated into the curriculum.',
-    badge: 'CET • NEET • JEE',
-  },
-  {
-    name: 'PU Commerce',
-    path: '/courses/commerce',
-    color: '#2e7d32',
-    icon: '📊',
-    subjects: ['Accountancy', 'Business Studies', 'Economics', 'Mathematics / Statistics', 'English'],
-    desc: 'Designed for students aspiring towards careers in Commerce, CA, CMA, CS, Banking, Finance and Management.',
-    badge: 'CA • CMA • CS',
-  },
-  {
-    name: 'PU Arts',
-    path: '/courses/arts',
-    color: '#6a1b9a',
-    icon: '📚',
-    subjects: ['History', 'Political Science', 'Sociology / Psychology', 'Economics', 'Language'],
-    desc: 'Opens pathways to careers in Law, Journalism, Civil Services, Psychology, Social Work and the Humanities.',
-    badge: 'Law • UPSC • Journalism',
-  },
+import pdfBrochure    from "../assets/pdf/16th-year-Brochure-2025-1.pdf"
+import pdfProspectus  from "../assets/pdf/ST.-Anthonys-Prospectus-2026-compressed.pdf"
+import pdfForm1       from "../assets/pdf/PUC-APPLICATION-FORM-ONE-2025-26.pdf"
+import pdfForm2       from "../assets/pdf/Microsoft Word - ADMGUIDELINES 2014-15.docx.pdf"
+
+// Replace with your actual college ad/brochure image
+// import adImg from '../assets/puc-ad.jpg'
+
+const scienceStreams = [
+  { code: 'PCMB',  subjects: 'Physics, Chemistry, Mathematics, Biology' },
+  { code: 'PCMCs', subjects: 'Physics, Chemistry, Mathematics, Computer Science' },
+  { code: 'PCME',  subjects: 'Physics, Chemistry, Mathematics, Electronics' },
+]
+
+const commerceStreams = [
+  { code: 'CEBA', subjects: 'Computer Science, Economics, Business Studies, Accountancy' },
+  { code: 'SEBA', subjects: 'Statistics, Economics, Business Studies, Accountancy' },
+  { code: 'HEBA', subjects: 'History, Economics, Business Studies, Accountancy' },
+  { code: 'MEBA', subjects: 'Basic Maths, Economics, Business Studies, Accountancy' },
+]
+
+const facilities = [
+  'Qualified, Experienced and Dedicated Staff',
+  'Special Coaching programme.',
+  'Innovative Teaching Methods: Audio-Visual Presentation.',
+  'Spacious & Well Equipped Labs & Class Rooms.',
+  'Finest Playgrounds and Best Infrastructure for Sports.',
+  'Attention for all-round growth, formation of individuals as well as building team spirit in Academics, Arts, Music and Dance.',
+  'Care of psychological, emotional & spiritual needs of the students.',
+  'Extra attention to Spoken English.',
+  'Class Guide System.',
+  'Personality enhancement programme.',
+  'Youth Leadership programme.',
+  'Courses in Human Development, Communication Skills, Event Management & Value Education.',
+  'Preparation of the generation to face future challenges.',
+  'An exhaustive library with the latest and updated journals. E-Learning Centre.',
+  'Counselling Services & Campus Selection from Renowned Companies.',
+]
+
+const downloads = [
+  { label: 'PUC BROCHURE',          href: pdfBrochure },
+  { label: 'PUC PROSPECTUS',         href: pdfProspectus },
+  { label: 'PUC APPLICATION FORM 1', href: pdfForm1 },
+  { label: 'PUC APPLICATION FORM 2', href: pdfForm2 },
 ]
 
 export default function PUC() {
   return (
     <div>
-      <PageHero title="PUC" breadcrumb={['Home', 'Courses', 'PUC']} />
 
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <p className="text-[#0288d1] font-extrabold text-sm uppercase tracking-widest mb-1">
-            Pre-University College
-          </p>
-          <h2 className="text-2xl font-bold text-navy mb-4">Streams Offered at St. Anthony's PUC</h2>
-          <div className="w-16 h-1 bg-maroon mb-3 rounded-full" />
-          <p className="text-gray-600 text-sm leading-7 mb-8 max-w-2xl">
-            St. Anthony's PU College offers three streams under the Pre-University Board, Karnataka.
-            Each stream comes with dedicated faculty, special competitive-exam coaching and strong
-            results year after year.
-          </p>
+      {/* ── Full-width banner ── */}
+      <div className="w-full overflow-hidden" style={{ maxHeight: 300 }}>
+        <img
+          src={ban23}
+          alt="St. Anthony's PU College"
+          className="w-full object-cover object-center"
+          style={{ display: 'block' }}
+        />
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {streams.map((s) => (
-              <div
-                key={s.name}
-                className="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
-              >
-                <div className="h-2" style={{ background: s.color }} />
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="text-4xl mb-3">{s.icon}</div>
-                  <h3 className="font-bold text-lg mb-1" style={{ color: s.color }}>{s.name}</h3>
-                  <span
-                    className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mb-3 text-white w-fit"
-                    style={{ background: s.color }}
-                  >
-                    {s.badge}
-                  </span>
-                  <p className="text-gray-600 text-xs leading-6 mb-4">{s.desc}</p>
-                  <div className="mt-auto">
-                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Subjects</p>
-                    <ul className="space-y-1">
-                      {s.subjects.map((sub) => (
-                        <li key={sub} className="flex items-center gap-2 text-xs text-gray-700">
-                          <span style={{ color: s.color }}>✦</span> {sub}
+      {/* ── Blue italic title bar ── */}
+   
+
+      {/* ── Main 2-column layout ── */}
+      <section className="py-8 bg-white">
+        <div className="max-w-6xl mx-auto px-4 max-w-5xl">
+          <div className="flex flex-col lg:flex-row gap-8">
+
+            {/* ════════ LEFT COLUMN ════════ */}
+            <div className="flex-1 min-w-0">
+
+              {/* Brief Details box */}
+              <div className="border border-[#f7f1cd] rounded p-5 mb-7 bg-[#f7f1cd]">
+                <h3 className="font-bold text-[15px] text-gray-800 mb-2">Brief Details</h3>
+                <p className="font-bold italic text-[13px] text-gray-700 mb-3">
+                  St. Anthony's Pre University College: Science, Commerce &amp; Arts
+                </p>
+                <p className="text-[13px] text-gray-600 leading-6 text-justify">
+                  St Anthony's Pre-University College is a gateway to your dreams and goals for it
+                  has a welcoming ambiance to the students coming from near and far. The College has
+                  such an environment that it ensures the holistic development and equips the students
+                  with learning skills. As PUC is an important stage of education which builds the
+                  future career of the students, the right choice at the right time, the right college
+                  at the right age makes all the difference, a turning point of your life.
+                </p>
+              </div>
+
+              {/* PUC Combinations */}
+              <div className="mb-7 bg-[#f9eaff] border border-[#f9eaff] rounded  p-5 mb-7">
+                <h3 className="font-bold text-[17px] text-gray-800 mb-4">PUC Combinations:</h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
+
+                  {/* Science */}
+                  <div>
+                    <p className="font-bold text-[13px] text-gray-800 mb-2 underline">
+                      1. Science Streams:
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1">
+                      {scienceStreams.map((s, i) => (
+                        <li key={s.code} className="text-[12.5px] text-gray-600">
+                          <strong>{s.code}</strong>: {s.subjects}
                         </li>
                       ))}
-                    </ul>
+                    </ol>
                   </div>
-                  <Link
-                    to={s.path}
-                    className="mt-5 block text-center text-white text-sm font-semibold py-2 rounded-lg transition-opacity hover:opacity-90"
-                    style={{ background: s.color }}
-                  >
-                    Know More →
-                  </Link>
+
+                  {/* Commerce */}
+                  <div>
+                    <p className="font-bold text-[13px] text-gray-800 mb-2 underline">
+                      2. Commerce Streams:
+                    </p>
+                    <ol className="list-decimal list-inside space-y-1">
+                      {commerceStreams.map((s, i) => (
+                        <li key={s.code} className="text-[12.5px] text-gray-600">
+                          <strong>{s.code}</strong>: {s.subjects}
+                        </li>
+                      ))}
+                    </ol>
+                    <p className="text-[12.5px] text-gray-600 mt-2">
+                      <strong>Languages</strong>: English, Kannada, Hindi, French.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Arts */}
+                <div className="mb-3">
+                  <p className="font-bold text-[13px] text-gray-800 mb-1 underline">
+                    3. Arts Stream:
+                  </p>
+                  <ol className="list-decimal list-inside">
+                    <li className="text-[12.5px] text-gray-600">
+                      <strong>HEGS</strong>: History, Economics, Geography, Sociology
+                    </li>
+                  </ol>
+                </div>
+
+                <p className="font-bold text-[12.5px] text-gray-700">
+                  The College provides NEET, JEE-Main &amp; Advanced, CA-CPT, CMA &amp; Soft Skills.
+                </p>
+
+ <div className="flex gap-10 mt-7 border-t border-b border-gray-200 py-4">
+                <div>
+                  <p className="font-bold text-[13px] text-gray-700 mb-1">Question Bank</p>
+                  <a href="#" className="text-[#0288d1] text-[12.5px] hover:underline">Read More</a>
+                </div>
+                <div>
+                  <p className="font-bold text-[13px] text-gray-700 mb-1">Other Courses</p>
+                  <a href="/courses/other-courses" className="text-[#0288d1] text-[12.5px] hover:underline">Read More</a>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Why choose SAPUC */}
-      <section className="py-10 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h3 className="text-xl font-bold text-navy mb-6 text-center">Why Choose St. Anthony's PUC?</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { icon: '👨‍🏫', text: 'Experienced Faculty' },
-              { icon: '🏆', text: 'Top Results' },
-              { icon: '📖', text: 'CET / NEET Coaching' },
-              { icon: '🏠', text: 'Hostel Facility' },
-              { icon: '⚽', text: 'Sports & Arts' },
-              { icon: '🌿', text: 'Eco-Friendly Campus' },
-            ].map(({ icon, text }) => (
-              <div key={text} className="bg-white rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-shadow">
-                <div className="text-3xl mb-2">{icon}</div>
-                <p className="text-xs font-semibold text-gray-700 leading-tight">{text}</p>
               </div>
-            ))}
+
+             
+
+              {/* Facilities */}
+              <div className="mb-7">
+                <h3 className="font-bold text-[17px] text-gray-800 mb-3">Facilities:</h3>
+                <ul className="space-y-1.5">
+                  {facilities.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-[12.5px] text-gray-600">
+                      <span className="mt-0.5 flex-shrink-0">•</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Quote */}
+              <p className="italic text-[13px] text-gray-600 mb-4">
+                "… Educating the mind with a heart of academics"
+              </p>
+
+              {/* Download links */}
+              <div className="space-y-2">
+                {downloads.map((d) => (
+                  <div key={d.label}>
+                    <a
+                      href={d.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      download
+                      className="text-[13px] font-semibold hover:underline"
+                      style={{ color: '#0288d1' }}
+                    >
+                      {d.label}
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+            {/* ════════ RIGHT COLUMN ════════ */}
+            <div className="lg:w-56 xl:w-64 flex-shrink-0">
+
+              {/* PROGRAMS widget */}
+              <div className="mb-5">
+                <h3
+                  className="font-bold text-[14px] tracking-wider mb-3"
+                  style={{ color: '#0288d1' }}
+                >
+                  PROGRAMS
+                </h3>
+                <div className="space-y-1">
+                  {[
+                    { label: 'Admissions',        to: '/admission' },
+                    { label: 'Activities & Events', to: '/activities' },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center gap-1">
+                      <span className="text-gray-400 text-xs">›</span>
+                      <Link
+                        to={item.to}
+                        className="text-[13px] text-gray-700 hover:text-[#0288d1] transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* College advertisement / brochure image */}
+              <div className="border border-gray-200 rounded overflow-hidden shadow-sm">
+                {/* Replace with your actual ad image */}
+                <img
+                  src={banner1}
+                  alt="St. Anthony's PU College"
+                  className="w-full"
+                  style={{ display: 'block' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                    e.target.parentNode.innerHTML = `
+                      <div style="background:#1a3974;padding:16px;color:white;font-size:11px;text-align:center">
+                        <div style="font-weight:bold;font-size:13px;margin-bottom:6px">ST. ANTHONY'S<br/>PRE-UNIVERSITY COLLEGE</div>
+                        <div style="color:#90caf9;font-size:10px;margin-bottom:8px">Recognised by Govt. of Karnataka</div>
+                        <div style="background:#f39c12;color:white;font-weight:bold;padding:4px 6px;border-radius:3px;font-size:10px;margin-bottom:6px">PUC SPECIAL TRAINING</div>
+                        <div style="font-weight:bold;font-size:14px;color:#ffeb3b">NEET – JEE</div>
+                        <div style="font-size:10px;color:#b3d9ff">CA-CPT CMA SOFT SKILLS</div>
+                        <hr style="border-color:#ffffff33;margin:8px 0"/>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-size:9px;margin-bottom:8px">
+                          <div style="background:#2e7d32;padding:4px;border-radius:2px">PU-SCIENCE<br/><span style="font-size:8px">PCMB|PCMCs|PCME</span></div>
+                          <div style="background:#0288d1;padding:4px;border-radius:2px">PU-COMMERCE<br/><span style="font-size:8px">CEBA|SEBA|MEBA|HEBA</span></div>
+                          <div style="background:#e65c00;padding:4px;border-radius:2px">PU-ARTS<br/><span style="font-size:8px">HEGS</span></div>
+                        </div>
+                        <hr style="border-color:#ffffff33;margin:8px 0"/>
+                        <div style="font-weight:bold;font-size:11px;margin-bottom:4px">DARSHAN DEGREE COLLEGE</div>
+                        <div style="font-size:10px;color:#b3d9ff">B.Com &nbsp; BBA &nbsp; BCA</div>
+                        <hr style="border-color:#ffffff33;margin:8px 0"/>
+                        <div style="font-size:9px;color:#b3d9ff">Ph: 080-2974 1973 / 94489 49867</div>
+                        <div style="font-size:9px;color:#b3d9ff">www.stanthonyscollege.edu.in</div>
+                      </div>`
+                  }}
+                />
+              </div>
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-8 bg-[#1a3974]">
-        <div className="container mx-auto px-4 text-center">
-          <h4 className="text-white font-bold text-lg mb-3">Admissions Open for 2025–26</h4>
-          <p className="text-blue-200 text-sm mb-5">
-            Secure your seat today. Limited seats available in all streams.
-          </p>
-          <Link
-            to="/admission"
-            className="inline-block bg-maroon hover:bg-red-800 text-white font-bold px-8 py-3 rounded-lg transition-colors text-sm"
-          >
-            Apply Now →
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }

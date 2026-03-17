@@ -19,9 +19,9 @@ const navItems = [
     label: 'COURSES',
     path: '/courses',
     dropdown: [
-      { label: "ST.ANTHONY'S GLOBAL ACADEMY",          path: '/courses/global-academy' },
+      { label: "ST.ANTHONY'S GLOBAL ACADEMY",          path: 'https://stanthonyglobalacademy.com' },
       { label: 'PUC',                                  path: '/courses/puc' },
-      { label: 'DEGREE (UG / MBA) – ST. ANTHONY\'S COLLEGE', path: '/courses/degree' },
+      { label: 'DEGREE (UG / MBA) – ST. ANTHONY\'S COLLEGE', path: 'https://stanthonys.edu.in' },
     ],
   },
   { label: 'FACILITIES',          path: '/facilities' },
@@ -29,7 +29,8 @@ const navItems = [
   { label: 'PHOTO GALLERY',       path: '/gallery' },
   { label: 'ACTIVITIES & EVENTS', path: '/activities' },
   { label: 'ANTHONIAN BULLETIN',  path: '/bulletin' },
-  { label: 'ADMISSION',           path: '/admission', highlight: true },
+  { label: 'ADMISSION',           path: '/admission' },
+    { label: 'CONTACT',           path: '/contact' },
 ]
 
 function ThreeLines({ align = 'left' }) {

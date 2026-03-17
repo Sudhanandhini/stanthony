@@ -19,9 +19,10 @@ const navItems = [
     label: 'COURSES',
     path: '/courses',
     dropdown: [
-      { label: "ST.ANTHONY'S GLOBAL ACADEMY",          path: 'https://stanthonyglobalacademy.com' },
-      { label: 'PUC',                                  path: '/courses/puc' },
-      { label: 'DEGREE (UG / MBA) – ST. ANTHONY\'S COLLEGE', path: 'https://stanthonys.edu.in' },
+      { label: "ST.ANTHONY'S GLOBAL ACADEMY",          path: '/courses/global-academy' },
+      { label: 'PUC',                                   path: '/courses/puc' },
+      { label: 'DEGREE (UG / MBA) – ST. ANTHONY\'S COLLEGE', path: '/courses/degree' },
+      { label: 'OTHER COURSES',                          path: '/courses/other-courses' },
     ],
   },
   { label: 'FACILITIES',          path: '/facilities' },
@@ -30,7 +31,7 @@ const navItems = [
   { label: 'ACTIVITIES & EVENTS', path: '/activities' },
   { label: 'ANTHONIAN BULLETIN',  path: '/bulletin' },
   { label: 'ADMISSION',           path: '/admission' },
-    { label: 'CONTACT',           path: '/contact' },
+  { label: 'CONTACT',             path: '/contact' },
 ]
 
 function ThreeLines({ align = 'left' }) {
@@ -75,7 +76,8 @@ export default function Header() {
         {/* Logo */}
         <Link to="/" className="flex items-center flex-shrink-0 px-3 py-2">
           <img src={logo} alt="St. Anthony's Institutions"
-            className="w-[220px] xl:w-[280px] h-auto object-contain" />
+            style={{ width: 'clamp(160px, 18vw, 280px)', height: 'auto' }}
+            className="object-contain" />
         </Link>
 
         {/* Right column */}
@@ -89,8 +91,8 @@ export default function Header() {
             </span>
           </div>
 
-          {/* Desktop nav — NO overflow on this element; it would clip the dropdowns */}
-          <nav className="hidden lg:flex items-stretch flex-1">
+          {/* Desktop nav — NO overflow; clips dropdowns */}
+          <nav className="hidden lg:flex items-stretch flex-1" style={{ justifyContent:'space-between'}}>
             {navItems.map((item) =>
               item.dropdown ? (
                 <div
@@ -100,20 +102,20 @@ export default function Header() {
                   onMouseLeave={() => setDropdownOpen(null)}
                 >
                   <button
-                    className={`flex items-center gap-[3px] px-[6px] h-full
-                      text-[12px] xl:text-[16px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
+                    style={{ fontSize: 'clamp(10px, 1vw, 14px)', paddingLeft: 'clamp(4px, 0.5vw, 9px)', paddingRight: 'clamp(4px, 0.5vw, 9px)' }}
+                    className={`flex items-center gap-[2px] h-full font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
                       ${dropdownOpen === item.label
                         ? 'bg-purple text-white'
                         : 'text-gray-800 hover:bg-purple hover:text-white'
                       }`}
                   >
                     {item.label}
-                    <ChevronDown size={10} className="ml-0.5" />
+                    <ChevronDown size={9} className="ml-0.5 flex-shrink-0" />
                   </button>
 
-                  {/* Dropdown panel — no max-height, no overflow, fully visible */}
+                  {/* Dropdown — no clip, no scroll */}
                   <div
-                    className={`absolute top-full left-0 bg-[#0288d1] min-w-[280px] z-[9999] shadow-xl
+                    className={`absolute top-full left-0 bg-[#0288d1] min-w-[260px] z-[9999] shadow-xl
                       transition-all duration-150
                       ${dropdownOpen === item.label
                         ? 'opacity-100 visible'
@@ -127,7 +129,7 @@ export default function Header() {
                         key={sub.path}
                         to={sub.path}
                         className={({ isActive }) =>
-                          `block px-5 py-[13px] text-[16px] font-semibold text-white
+                          `block px-5 py-[12px] text-[13px] font-semibold text-white
                           transition-colors hover:bg-[#0277b5]
                           ${i < item.dropdown.length - 1 ? 'border-b border-white/20' : ''}
                           ${isActive ? 'bg-[#01579b]' : ''}`
@@ -143,16 +145,12 @@ export default function Header() {
                 <NavLink
                   key={item.label}
                   to={item.path}
+                  style={{ fontSize: 'clamp(10px, 1vw, 14px)', paddingLeft: 'clamp(4px, 0.5vw, 9px)', paddingRight: 'clamp(4px, 0.5vw, 9px)' }}
                   className={({ isActive }) =>
-                    `flex items-center px-[6px] flex-shrink-0
-                    text-[12px] xl:text-[16px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
-                    ${item.highlight
-                      ? isActive
-                        ? 'bg-maroon text-white'
-                        : 'bg-maroon text-white hover:bg-maroon-dark'
-                      : isActive
-                        ? 'bg-purple text-white'
-                        : 'text-gray-800 hover:bg-purple hover:text-white'
+                    `flex items-center flex-shrink-0 font-bold tracking-wide transition-colors duration-150 whitespace-nowrap
+                    ${isActive
+                      ? 'bg-purple text-white'
+                      : 'text-gray-800 hover:bg-purple hover:text-white'
                     }`
                   }
                   end={item.path === '/'}
@@ -219,11 +217,9 @@ export default function Header() {
                   to={item.path}
                   className={({ isActive }) =>
                     `block px-5 py-3 text-sm font-bold border-b border-gray-100 transition-colors
-                    ${item.highlight
-                      ? 'bg-maroon text-white hover:bg-maroon-dark'
-                      : isActive
-                        ? 'bg-purple text-white'
-                        : 'text-gray-800 hover:bg-purple hover:text-white'
+                    ${isActive
+                      ? 'bg-purple text-white'
+                      : 'text-gray-800 hover:bg-purple hover:text-white'
                     }`
                   }
                   onClick={() => { setMenuOpen(false); setMobileOpen({}) }}

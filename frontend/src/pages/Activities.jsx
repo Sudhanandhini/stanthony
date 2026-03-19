@@ -39,7 +39,8 @@ function ActivityCard({ activity }) {
           </div>
           <div className="mt-5 text-center">
             <Link
-              to={`/activities/${activity.slug}`}
+              to={`/gallery`}
+              // to={`/activities/${activity.slug}`}
               className="inline-block px-6 py-2 text-white text-[13px] font-semibold rounded transition-opacity hover:opacity-90"
               style={{ background: '#1a3974' }}
             >
@@ -80,7 +81,7 @@ export default function Activities() {
           backgroundColor: '#f5f0e8',
         }}
       >
-        <div className="mx-auto px-4 max-w-6xl">
+        <div className="mx-auto px-4 max-w-8xl">
           {loading && (
             <p className="text-center text-gray-500 py-10">Loading activities...</p>
           )}

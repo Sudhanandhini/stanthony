@@ -1,3 +1,5 @@
+import ban131 from "../assets/11-1.jpg"
+
 const departments = [
   {
     name: 'Science Department',
@@ -48,9 +50,9 @@ const departments = [
 export default function Faculty() {
   return (
     <div>
-      <div className="bg-gradient-to-r from-navy to-maroon text-white py-10 text-center">
-        <h1 className="text-3xl font-bold tracking-widest uppercase font-display">FACULTY</h1>
-      </div>
+         <div className=" text-center">
+                    <img src={ban131} />
+                     </div>
 
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">

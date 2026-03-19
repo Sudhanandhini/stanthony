@@ -1,72 +1,70 @@
-import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ChevronDown, ChevronUp, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import ban111 from "../assets/photogallery.png"
 
-const galleryCategories2026 = [
-  'Excursion organized by St. Anthony\'s PU College',
-  'Christmas Celebration',
-  'SPECTRUM 2025 - A Fest of Flavor and Rhythm',
-  'Beats & Bites - Campus Celebration - Ignite the vibe of color and culture',
-  'Seminar on Artificial Intelligence & Statistics at Christ University',
-  'Director\'s Birthday Celebration',
-  'Annual Sports and Athletics Meet',
-  'ANTHONIAN PREMIER LEAGUE (APL) – SEASON 3',
-  'District Level Kabbaddi (Girls) Tournament',
-  'Independence Day celebration 2025',
-  'Commencement of 1st Exam - 1st & 2nd PUC 2026',
-  'Investiture Ceremony 2025',
-  'Felicitation for the Anthonian Academic Achievers 2025-2026',
-  'Celebrating International Yoga Day 2025-2026',
-  'Parent Orientation Programme',
-  'Student Orientation Programme 2025 - 2026',
-  'Inauguration of the Academic year 2025-26',
-  '1st PU result 2025',
-  'Staff Prize 2025',
-  'Commencement of 1st PUC Annual Examinations',
-  'PU Day Celebration',
-  'Staff & Students Photos - 1st & 2nd Year PU Students 2025-25',
-]
+const BASE_URL = 'https://www.stanthonyscollege.edu.in/wp-content/uploads/photo-gallery'
+const PHOTOS_PER_PAGE = 12
 
-const galleryCategories2025 = [
-  'Christmas Day 2024',
-  'Academic Concourse',
-  'Kannada Rajyotsava Celebration 2024',
-  'Beats & Bites 2024',
-  'ANTHONIAN ATHLETIC MEET 2024',
-  'Anthonian Premier League (APL) - Season 2',
-  'Youth Bharat Abhiyan & International Democracy Day',
-  'Midterm Exams Commence for Pre-University Students',
-  'Faculty Development Program',
-  'Seminar on Career in Corporate',
-  'District Level Staff Badminton Netball Tournament 2024-2025',
-  'Independence Day 2024',
-  'Workshop on NEET, K-CET & COMPETITIVE EXAMS',
-  'Freshers Day 2024',
-]
+function getThumbUrl(thumbUrl) {
+  if (!thumbUrl) return null
+  return BASE_URL + thumbUrl
+}
 
-const galleryCategories2024 = [
-  'Parent Orientation Programme 2024',
-  'Investiture ceremony 2024',
-  'Felicitation for the Anthonian Academic Achievers 2024',
-  'International Yoga Day 2024',
-  'Student Orientation Program 2024',
-  'Inauguration of the Academic year 2024-25',
-  'PU Day Celebration And Farewell Programme',
-  'Science Exhibition 2024',
-  'Christmas Programme 2023',
-  'Kannada Rajyotsava 2023',
-  'Beats & Bites – Campus Celebration',
-  'Anthonian Athletic Meet – 2023',
-  'Anthonian Premier League (APL)',
-  'Girls Welfare Programme',
-]
+function getFullUrl(imageUrl) {
+  if (!imageUrl) return null
+  return BASE_URL + imageUrl
+}
 
-const mainGalleryPhotos = Array.from({ length: 12 }, (_, i) => ({
-  id: i + 1,
-  label: `Event Photo ${i + 1}`,
-  category: 'Anthonian PU Day Celebration',
-}))
+function Lightbox({ photos, index, onClose, onPrev, onNext }) {
+  const photo = photos[index]
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'ArrowRight') onNext()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose, onPrev, onNext])
 
-function AccordionSection({ title, items }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+      onClick={onClose}
+    >
+      <button
+        className="absolute top-4 right-4 text-white hover:text-gray-300"
+        onClick={onClose}
+      >
+        <X size={28} />
+      </button>
+      <button
+        className="absolute left-4 text-white hover:text-gray-300 p-2"
+        onClick={(e) => { e.stopPropagation(); onPrev() }}
+      >
+        <ChevronLeft size={36} />
+      </button>
+      <img
+        src={getFullUrl(photo.image_url)}
+        alt={photo.alt || photo.filename}
+        className="max-h-[85vh] max-w-[85vw] object-contain"
+        onClick={(e) => e.stopPropagation()}
+        onError={(e) => { e.target.src = getThumbUrl(photo.thumb_url) }}
+      />
+      <button
+        className="absolute right-4 text-white hover:text-gray-300 p-2"
+        onClick={(e) => { e.stopPropagation(); onNext() }}
+      >
+        <ChevronRight size={36} />
+      </button>
+      <div className="absolute bottom-4 text-white text-sm opacity-70">
+        {index + 1} / {photos.length}
+      </div>
+    </div>
+  )
+}
+
+function AccordionSection({ title, galleries, selectedId, onSelect }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="border border-navy rounded mb-2">
@@ -79,12 +77,15 @@ function AccordionSection({ title, items }) {
       </button>
       {open && (
         <div className="p-3 bg-gray-50">
-          {items.map((item) => (
+          {galleries.map((g) => (
             <button
-              key={item}
-              className="w-full text-left text-sm text-gray-700 py-2 px-3 hover:bg-teal hover:text-white rounded mb-1 flex justify-between items-center transition-colors border border-gray-200"
+              key={g.id}
+              onClick={() => onSelect(g)}
+              className={`w-full text-left text-sm py-2 px-3 hover:bg-teal hover:text-white rounded mb-1 flex justify-between items-center transition-colors border border-gray-200 ${
+                selectedId === g.id ? 'bg-teal text-white' : 'text-gray-700'
+              }`}
             >
-              {item}
+              {g.name}
               <ChevronDown size={14} className="flex-shrink-0" />
             </button>
           ))}
@@ -95,72 +96,156 @@ function AccordionSection({ title, items }) {
 }
 
 export default function Gallery() {
+  const [galleries, setGalleries] = useState([])
+  const [selectedGallery, setSelectedGallery] = useState(null)
+  const [photos, setPhotos] = useState([])
+  const [loadingPhotos, setLoadingPhotos] = useState(false)
+  const [page, setPage] = useState(1)
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/gallery')
+      .then(r => r.json())
+      .then(data => {
+        setGalleries(data)
+        if (data.length > 0) loadGalleryPhotos(data[0])
+      })
+      .catch(console.error)
+  }, [])
+
+  function loadGalleryPhotos(gallery) {
+    setSelectedGallery(gallery)
+    setPage(1)
+    setLoadingPhotos(true)
+    fetch(`http://localhost:5000/api/gallery/${gallery.id}/images`)
+      .then(r => r.json())
+      .then(imgs => { setPhotos(imgs); setLoadingPhotos(false) })
+      .catch(() => setLoadingPhotos(false))
+  }
+
+  // Group galleries by academic year label
+  const grouped = galleries.reduce((acc, g) => {
+    const yr = g.academic_year
+    const key = yr ? `${yr}-${yr + 1}` : 'Other'
+    if (!acc[key]) acc[key] = []
+    acc[key].push(g)
+    return acc
+  }, {})
+
+  const sortedYears = Object.keys(grouped).sort((a, b) => {
+    if (a === 'Other') return 1
+    if (b === 'Other') return -1
+    return b.localeCompare(a)
+  })
+
+  const currentYear = sortedYears[0]
+  const olderYears = sortedYears.slice(1)
+
+  // Pagination
+  const totalPages = Math.ceil(photos.length / PHOTOS_PER_PAGE)
+  const visiblePhotos = photos.slice((page - 1) * PHOTOS_PER_PAGE, page * PHOTOS_PER_PAGE)
+
   return (
     <div>
       {/* Hero */}
-      <div className="relative h-40 bg-gray-800 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-600 flex items-center justify-center">
-          <div className="text-6xl opacity-30">📷</div>
-        </div>
-        <div className="absolute bottom-0 w-full bg-navy bg-opacity-90 text-center py-3">
-          <h1 className="text-2xl font-bold text-white tracking-widest uppercase font-display">PHOTO GALLERY</h1>
-        </div>
-      </div>
+       <div className=" text-center">
+          <img src={ban111} />
+           </div>
 
       <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
-          {/* Category selector */}
-          <div className="flex items-center justify-between bg-teal text-white px-4 py-2 rounded-t mb-0">
-            <span className="font-semibold text-sm">Anthonian PU Day Celebration</span>
-            <ChevronDown size={16} />
-          </div>
+          {/* Selected gallery header */}
+          {selectedGallery && (
+            <div className="flex items-center justify-between bg-teal text-white px-4 py-2 rounded-t mb-0">
+              <span className="font-semibold text-sm">{selectedGallery.name}</span>
+              <ChevronDown size={16} />
+            </div>
+          )}
 
           {/* Photo grid */}
           <div className="bg-white p-4 shadow-md mb-6">
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-              {mainGalleryPhotos.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="aspect-video bg-gradient-to-br from-navy to-maroon rounded overflow-hidden flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
-                >
-                  <div className="text-center text-white p-2">
-                    <div className="text-2xl mb-1">📸</div>
-                    <p className="text-[10px]">{photo.label}</p>
+            {loadingPhotos ? (
+              <div className="text-center py-10 text-gray-500 text-sm">Loading photos...</div>
+            ) : visiblePhotos.length === 0 ? (
+              <div className="text-center py-10 text-gray-400 text-sm">No photos available</div>
+            ) : (
+              <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                {visiblePhotos.map((photo, i) => (
+                  <div
+                    key={photo.id}
+                    className="aspect-video bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => setLightboxIndex((page - 1) * PHOTOS_PER_PAGE + i)}
+                  >
+                    <img
+                      src={getThumbUrl(photo.thumb_url)}
+                      alt={photo.alt || photo.filename}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.parentElement.classList.add('bg-gradient-to-br', 'from-navy', 'to-maroon')
+                      }}
+                    />
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Pagination */}
-            <div className="flex justify-center gap-2 mt-4">
-              {[1, 2, 3, 4, 5].map((p) => (
-                <button
-                  key={p}
-                  className={`w-7 h-7 rounded text-xs font-semibold transition-colors ${p === 1 ? 'bg-maroon text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-4">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`w-7 h-7 rounded text-xs font-semibold transition-colors ${
+                      p === page ? 'bg-maroon text-white' : 'bg-gray-200 hover:bg-gray-300'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Accordion categories */}
+          {/* Gallery list – current year flat, older years as accordions */}
           <div className="space-y-1">
-            {galleryCategories2026.map((cat) => (
+            {currentYear && grouped[currentYear]?.map((g) => (
               <button
-                key={cat}
-                className="w-full text-left text-sm text-gray-700 py-2.5 px-4 flex justify-between items-center bg-white border border-gray-200 hover:bg-teal hover:text-white transition-colors rounded"
+                key={g.id}
+                onClick={() => loadGalleryPhotos(g)}
+                className={`w-full text-left text-sm py-2.5 px-4 flex justify-between items-center border border-gray-200 hover:bg-teal hover:text-white transition-colors rounded ${
+                  selectedGallery?.id === g.id ? 'bg-teal text-white' : 'bg-white text-gray-700'
+                }`}
               >
-                {cat}
+                {g.name}
                 <ChevronDown size={14} className="flex-shrink-0" />
               </button>
             ))}
 
-            <AccordionSection title="ANTHONIAN BULLETIN 2024 - 2025" items={galleryCategories2025} />
-            <AccordionSection title="ANTHONIAN BULLETIN 2023 - 2024" items={galleryCategories2024} />
+            {olderYears.map((yr) => (
+              <AccordionSection
+                key={yr}
+                title={`ANTHONIAN BULLETIN ${yr}`}
+                galleries={grouped[yr] || []}
+                selectedId={selectedGallery?.id}
+                onSelect={loadGalleryPhotos}
+              />
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && photos.length > 0 && (
+        <Lightbox
+          photos={photos}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={() => setLightboxIndex((lightboxIndex - 1 + photos.length) % photos.length)}
+          onNext={() => setLightboxIndex((lightboxIndex + 1) % photos.length)}
+        />
+      )}
     </div>
   )
 }

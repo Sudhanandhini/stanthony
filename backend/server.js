@@ -6,7 +6,18 @@ const multer     = require('multer')
 const jwt        = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const pool       = require('./db')
+const mysql2     = require('mysql2/promise')
 require('dotenv').config()
+
+// ── Separate pool for result database ────────────────────────────────────────
+const resultPool = mysql2.createPool({
+  host:     process.env.DB_HOST     || 'localhost',
+  user:     process.env.DB_USER     || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: 'stantho-result',
+  waitForConnections: true,
+  connectionLimit: 5,
+})
 
 const app  = express()
 const PORT = process.env.PORT || 5000
@@ -323,6 +334,25 @@ app.get('/api/public-activities', async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM admin_activities ORDER BY created_at DESC')
     res.json(rows)
   } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
+// ── PUC Result ───────────────────────────────────────────────────────────────
+const ALLOWED_RESULT_TABLES = ['hegs', 'heba', 'pcmb', 'pcmc', 'seba', 'ebac']
+
+app.get('/api/result', async (req, res) => {
+  const { student_id, table } = req.query
+  if (!student_id?.trim()) return res.status(400).json({ message: 'Student ID required' })
+  const tbl = (table || '').toLowerCase()
+  if (!ALLOWED_RESULT_TABLES.includes(tbl)) return res.status(400).json({ message: 'Invalid stream selected' })
+  try {
+    const [rows] = await resultPool.query(
+      `SELECT * FROM \`${tbl}\` WHERE student_id = ?`, [student_id.trim()]
+    )
+    if (!rows.length) return res.status(404).json({ message: 'No student found with this ID' })
+    res.json(rows[0])
+  } catch (err) {
+    res.status(500).json({ message: 'Database error: ' + err.message })
+  }
 })
 
 // ── Contact form ─────────────────────────────────────────────────────────────

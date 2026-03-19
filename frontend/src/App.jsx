@@ -25,6 +25,7 @@ import GlobalAcademy from './pages/Globalacademy'
 import PUC           from './pages/Puc'
 import Degree        from './pages/Degree'
 import Othercourses  from './pages/Othercourses'
+import Result        from './pages/Result'
 
 import Admin from './pages/Admin'
 
@@ -52,6 +53,7 @@ function PublicLayout() {
           <Route path="/courses/puc"              element={<PUC />} />
           <Route path="/courses/degree"           element={<Degree />} />
           <Route path="/courses/other-courses"    element={<Othercourses />} />
+          <Route path="/courses/result"           element={<Result />} />
         </Routes>
       </main>
       <Footer />

@@ -37,14 +37,29 @@ const inp =
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
   const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    setForm({ name: '', email: '', subject: '', message: '' })
-    setTimeout(() => setSubmitted(false), 5000)
+    setSending(true); setError('')
+    try {
+      const res = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to send')
+      setSubmitted(true)
+      setForm({ name: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -276,12 +291,16 @@ export default function Contact() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-red-500 text-xs text-center">{error}</p>
+                  )}
                   <button
                     type="submit"
-                    className="w-full text-white font-bold text-sm py-2.5 rounded transition-opacity hover:opacity-90"
+                    disabled={sending}
+                    className="w-full text-white font-bold text-sm py-2.5 rounded transition-opacity hover:opacity-90 disabled:opacity-60"
                     style={{ background: '#0288d1' }}
                   >
-                    Send
+                    {sending ? 'Sending...' : 'Send'}
                   </button>
                 </form>
               )}

@@ -1,14 +1,26 @@
-const express = require('express')
-const cors    = require('cors')
-const path    = require('path')
-const fs      = require('fs')
-const multer  = require('multer')
-const jwt     = require('jsonwebtoken')
-const pool    = require('./db')
+const express    = require('express')
+const cors       = require('cors')
+const path       = require('path')
+const fs         = require('fs')
+const multer     = require('multer')
+const jwt        = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
+const pool       = require('./db')
 require('dotenv').config()
 
 const app  = express()
 const PORT = process.env.PORT || 5000
+
+// ── Nodemailer transporter ────────────────────────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT) || 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+})
 const JWT_SECRET   = process.env.JWT_SECRET   || 'stanthonys_secret'
 const ADMIN_USER   = process.env.ADMIN_USER   || 'admin'
 const ADMIN_PASS   = process.env.ADMIN_PASS   || 'admin123'
@@ -311,6 +323,105 @@ app.get('/api/public-activities', async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM admin_activities ORDER BY created_at DESC')
     res.json(rows)
   } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
+// ── Contact form ─────────────────────────────────────────────────────────────
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body
+  if (!name?.trim() || !email?.trim()) return res.status(400).json({ error: 'Name and email required' })
+  try {
+    await transporter.sendMail({
+      from: `"St. Anthony's Website" <${process.env.SMTP_USER}>`,
+      to: process.env.MAIL_TO,
+      replyTo: email,
+      subject: subject?.trim() || `Enquiry from ${name}`,
+      html: `
+        <h2 style="color:#1a3974">New Enquiry – St. Anthony's PU College</h2>
+        <table style="border-collapse:collapse;width:100%">
+          <tr><td style="padding:6px 12px;font-weight:bold;color:#555;width:140px">Name</td><td style="padding:6px 12px">${name}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold;color:#555">Email</td><td style="padding:6px 12px"><a href="mailto:${email}">${email}</a></td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold;color:#555">Subject</td><td style="padding:6px 12px">${subject || '—'}</td></tr>
+          <tr style="background:#f5f5f5"><td style="padding:6px 12px;font-weight:bold;color:#555;vertical-align:top">Message</td><td style="padding:6px 12px;white-space:pre-wrap">${message || '—'}</td></tr>
+        </table>
+      `,
+    })
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Contact mail error:', err.message)
+    res.status(500).json({ error: 'Failed to send email' })
+  }
+})
+
+// ── Admission form ────────────────────────────────────────────────────────────
+app.post('/api/admission', async (req, res) => {
+  const f = req.body
+  if (!f.studentName?.trim()) return res.status(400).json({ error: 'Student name required' })
+  const row = (label, val, bg) =>
+    `<tr style="${bg?'background:#f5f5f5':''}"><td style="padding:5px 12px;font-weight:bold;color:#555;width:220px">${label}</td><td style="padding:5px 12px">${val || '—'}</td></tr>`
+  try {
+    await transporter.sendMail({
+      from: `"St. Anthony's Admission" <${process.env.SMTP_USER}>`,
+      to: process.env.MAIL_TO,
+      replyTo: f.email,
+      subject: `Admission Application – ${f.studentName} (${f.stream || 'Stream not selected'})`,
+      html: `
+        <h2 style="color:#1a3974">New Admission Application – St. Anthony's PU College</h2>
+
+        <h3 style="color:#0288d1;margin-top:16px">Personal Information</h3>
+        <table style="border-collapse:collapse;width:100%">
+          ${row('Student Name', f.studentName)}
+          ${row('Father Name', f.fatherName, true)}
+          ${row('Father Contact', f.fatherContact)}
+          ${row('Mother Name', f.motherName, true)}
+          ${row('Mother Contact', f.motherContact)}
+          ${row('Address', f.address, true)}
+          ${row('Nationality', f.nationality)}
+          ${row('Caste', f.caste, true)}
+          ${row('Mother Tongue', f.motherTongue)}
+          ${row('Religion', f.religion, true)}
+          ${row('Aadhar No', f.aadharNo)}
+          ${row('Email', f.email, true)}
+        </table>
+
+        <h3 style="color:#0288d1;margin-top:16px">Educational Background</h3>
+        <table style="border-collapse:collapse;width:100%">
+          ${row('SATS No', f.satsNo)}
+          ${row('School Name', f.schoolName, true)}
+          ${row('Board', f.boardName)}
+        </table>
+
+        <h3 style="color:#0288d1;margin-top:16px">SSLC Examination Details</h3>
+        <table style="border-collapse:collapse;width:100%">
+          ${row('Reg No', f.regNo)}
+          ${row('Year', f.examYear, true)}
+          ${row('Month', f.examMonth)}
+          ${row('Medium', f.medium, true)}
+        </table>
+
+        <h3 style="color:#0288d1;margin-top:16px">Marks Obtained (Out of 80)</h3>
+        <table style="border-collapse:collapse;width:100%">
+          ${row('I Language', f.lang1)}
+          ${row('II Language', f.lang2, true)}
+          ${row('III Language', f.lang3)}
+          ${row('Science', f.science, true)}
+          ${row('Mathematics', f.maths)}
+          ${row('Social Science', f.socialScience, true)}
+          ${row('Total Marks', f.totalMarks)}
+        </table>
+
+        <h3 style="color:#0288d1;margin-top:16px">Course Preferences</h3>
+        <table style="border-collapse:collapse;width:100%">
+          ${row('Second Language(s)', Array.isArray(f.secondLang) ? f.secondLang.join(', ') : f.secondLang)}
+          ${row('Stream Applied', f.stream, true)}
+          ${row('Achievements', f.achievements)}
+        </table>
+      `,
+    })
+    res.json({ success: true })
+  } catch (err) {
+    console.error('Admission mail error:', err.message)
+    res.status(500).json({ error: 'Failed to send email' })
+  }
 })
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))

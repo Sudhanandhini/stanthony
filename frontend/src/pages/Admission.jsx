@@ -67,6 +67,8 @@ export default function Admission() {
 
   const [submitted, setSubmitted] = useState(false)
   const [errors, setErrors] = useState({})
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState('')
 
   const set = (key) => (e) => {
     setForm((p) => ({ ...p, [key]: e.target.value }))
@@ -113,7 +115,7 @@ export default function Admission() {
     return e
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length) {
@@ -122,8 +124,22 @@ export default function Admission() {
       if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' })
       return
     }
-    setSubmitted(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setSending(true); setSendError('')
+    try {
+      const res = await fetch('http://localhost:5000/api/admission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to send')
+      setSubmitted(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      setSendError(err.message)
+    } finally {
+      setSending(false)
+    }
   }
 
   const Err = ({ k }) =>
@@ -418,12 +434,16 @@ export default function Admission() {
             </div>
 
             {/* ── Submit ── */}
+            {sendError && (
+              <p className="text-red-500 text-xs text-center mb-2">{sendError}</p>
+            )}
             <button
               type="submit"
-              className="w-full text-white font-bold text-sm py-3 rounded transition-opacity hover:opacity-90"
+              disabled={sending}
+              className="w-full text-white font-bold text-sm py-3 rounded transition-opacity hover:opacity-90 disabled:opacity-60"
               style={{ background: '#0288d1' }}
             >
-              Submit Application
+              {sending ? 'Submitting...' : 'Submit Application'}
             </button>
           </form>
 

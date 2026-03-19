@@ -2,25 +2,36 @@ import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import ban111 from "../assets/photogallery.png"
 
-const BASE_URL = 'https://www.stanthonyscollege.edu.in/wp-content/uploads/photo-gallery'
+const WP_BASE = 'https://www.stanthonyscollege.edu.in/wp-content/uploads/photo-gallery'
+const API_BASE = 'http://localhost:5000'
 const PHOTOS_PER_PAGE = 12
 
-function getThumbUrl(thumbUrl) {
-  if (!thumbUrl) return null
-  return BASE_URL + thumbUrl
+// Normalize WordPress photo → common shape
+function fromWP(photo) {
+  return {
+    id: photo.id,
+    thumbSrc: photo.thumb_url ? WP_BASE + photo.thumb_url : null,
+    fullSrc:  photo.image_url  ? WP_BASE + photo.image_url  : null,
+    label: photo.alt || photo.filename || '',
+  }
 }
 
-function getFullUrl(imageUrl) {
-  if (!imageUrl) return null
-  return BASE_URL + imageUrl
+// Normalize admin photo → common shape
+function fromAdmin(photo) {
+  return {
+    id: photo.id,
+    thumbSrc: API_BASE + photo.image_path,
+    fullSrc:  API_BASE + photo.image_path,
+    label: photo.title || '',
+  }
 }
 
 function Lightbox({ photos, index, onClose, onPrev, onNext }) {
   const photo = photos[index]
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'Escape')     onClose()
+      if (e.key === 'ArrowLeft')  onPrev()
       if (e.key === 'ArrowRight') onNext()
     }
     window.addEventListener('keydown', handler)
@@ -32,10 +43,7 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
       onClick={onClose}
     >
-      <button
-        className="absolute top-4 right-4 text-white hover:text-gray-300"
-        onClick={onClose}
-      >
+      <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={onClose}>
         <X size={28} />
       </button>
       <button
@@ -45,11 +53,11 @@ function Lightbox({ photos, index, onClose, onPrev, onNext }) {
         <ChevronLeft size={36} />
       </button>
       <img
-        src={getFullUrl(photo.image_url)}
-        alt={photo.alt || photo.filename}
+        src={photo.fullSrc}
+        alt={photo.label}
         className="max-h-[85vh] max-w-[85vw] object-contain"
         onClick={(e) => e.stopPropagation()}
-        onError={(e) => { e.target.src = getThumbUrl(photo.thumb_url) }}
+        onError={(e) => { if (photo.thumbSrc) e.target.src = photo.thumbSrc }}
       />
       <button
         className="absolute right-4 text-white hover:text-gray-300 p-2"
@@ -70,7 +78,7 @@ function AccordionSection({ title, galleries, selectedId, onSelect }) {
     <div className="border border-navy rounded mb-2">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex justify-between items-center bg-navy text-white px-4 py-3 font-semibold text-sm text-left hover:bg-navy"
+        className="w-full flex justify-between items-center bg-navy text-white px-4 py-3 font-semibold text-sm text-left"
       >
         {title}
         {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -95,35 +103,88 @@ function AccordionSection({ title, galleries, selectedId, onSelect }) {
   )
 }
 
+function AdminGalleriesSection({ galleries, selectedId, onSelect }) {
+  const [open, setOpen] = useState(true)
+  return (
+    <div className="border border-teal rounded mb-2">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex justify-between items-center bg-teal text-white px-4 py-3 font-semibold text-sm text-left"
+      >
+        Recent Galleries
+        {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
+      {open && (
+        <div className="p-3 bg-gray-50 space-y-1">
+          {galleries.map((g) => (
+            <button
+              key={`admin-${g.id}`}
+              onClick={() => onSelect(g)}
+              className={`w-full text-left text-sm py-2 px-3 hover:bg-teal hover:text-white rounded flex justify-between items-center transition-colors border border-gray-200 ${
+                selectedId === g.id ? 'bg-teal text-white' : 'text-gray-700'
+              }`}
+            >
+              <span>{g.name}</span>
+              <span className="text-xs opacity-70">{g.images?.length || 0} photos</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Gallery() {
   const [galleries, setGalleries] = useState([])
+  const [adminGalleries, setAdminGalleries] = useState([])
   const [selectedGallery, setSelectedGallery] = useState(null)
-  const [photos, setPhotos] = useState([])
+  const [photos, setPhotos] = useState([])       // normalized shape
   const [loadingPhotos, setLoadingPhotos] = useState(false)
   const [page, setPage] = useState(1)
   const [lightboxIndex, setLightboxIndex] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
+    // Load admin galleries first — if any exist, auto-select the most recent
+    fetch(`${API_BASE}/api/gallery/admin-galleries`)
       .then(r => r.json())
       .then(data => {
+        const list = Array.isArray(data) ? data : []
+        setAdminGalleries(list)
+        if (list.length > 0) {
+          loadAdminGallery(list[0])
+        }
+      })
+      .catch(console.error)
+
+    fetch(`${API_BASE}/api/gallery`)
+      .then(r => r.json())
+      .then(data => {
+        if (!Array.isArray(data)) return
         setGalleries(data)
-        if (data.length > 0) loadGalleryPhotos(data[0])
       })
       .catch(console.error)
   }, [])
 
-  function loadGalleryPhotos(gallery) {
+  function loadWPGallery(gallery) {
     setSelectedGallery(gallery)
     setPage(1)
     setLoadingPhotos(true)
-    fetch(`http://localhost:5000/api/gallery/${gallery.id}/images`)
+    fetch(`${API_BASE}/api/gallery/${gallery.id}/images`)
       .then(r => r.json())
-      .then(imgs => { setPhotos(imgs); setLoadingPhotos(false) })
+      .then(imgs => {
+        setPhotos(Array.isArray(imgs) ? imgs.map(fromWP) : [])
+        setLoadingPhotos(false)
+      })
       .catch(() => setLoadingPhotos(false))
   }
 
-  // Group galleries by academic year label
+  function loadAdminGallery(gallery) {
+    setSelectedGallery({ ...gallery, _isAdmin: true })
+    setPage(1)
+    setPhotos((gallery.images || []).map(fromAdmin))
+  }
+
+  // Group WordPress galleries by academic year
   const grouped = galleries.reduce((acc, g) => {
     const yr = g.academic_year
     const key = yr ? `${yr}-${yr + 1}` : 'Other'
@@ -147,13 +208,13 @@ export default function Gallery() {
 
   return (
     <div>
-      {/* Hero */}
-       <div className=" text-center">
-          <img src={ban111} />
-           </div>
+      <div className="text-center">
+        <img src={ban111} />
+      </div>
 
       <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
+
           {/* Selected gallery header */}
           {selectedGallery && (
             <div className="flex items-center justify-between bg-teal text-white px-4 py-2 rounded-t mb-0">
@@ -177,8 +238,8 @@ export default function Gallery() {
                     onClick={() => setLightboxIndex((page - 1) * PHOTOS_PER_PAGE + i)}
                   >
                     <img
-                      src={getThumbUrl(photo.thumb_url)}
-                      alt={photo.alt || photo.filename}
+                      src={photo.thumbSrc}
+                      alt={photo.label}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         e.target.style.display = 'none'
@@ -190,7 +251,6 @@ export default function Gallery() {
               </div>
             )}
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center gap-2 mt-4">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
@@ -208,14 +268,27 @@ export default function Gallery() {
             )}
           </div>
 
-          {/* Gallery list – current year flat, older years as accordions */}
+          {/* Gallery list */}
           <div className="space-y-1">
+
+            {/* Admin-uploaded galleries (shown first, open by default) */}
+            {adminGalleries.length > 0 && (
+              <AdminGalleriesSection
+                galleries={adminGalleries}
+                selectedId={selectedGallery?._isAdmin ? selectedGallery?.id : null}
+                onSelect={loadAdminGallery}
+              />
+            )}
+
+            {/* WordPress galleries – current year flat */}
             {currentYear && grouped[currentYear]?.map((g) => (
               <button
                 key={g.id}
-                onClick={() => loadGalleryPhotos(g)}
+                onClick={() => loadWPGallery(g)}
                 className={`w-full text-left text-sm py-2.5 px-4 flex justify-between items-center border border-gray-200 hover:bg-teal hover:text-white transition-colors rounded ${
-                  selectedGallery?.id === g.id ? 'bg-teal text-white' : 'bg-white text-gray-700'
+                  !selectedGallery?._isAdmin && selectedGallery?.id === g.id
+                    ? 'bg-teal text-white'
+                    : 'bg-white text-gray-700'
                 }`}
               >
                 {g.name}
@@ -223,20 +296,20 @@ export default function Gallery() {
               </button>
             ))}
 
+            {/* Older years as accordions */}
             {olderYears.map((yr) => (
               <AccordionSection
                 key={yr}
-                title={`ANTHONIAN BULLETIN ${yr}`}
+                title={`PHOTO GALLERY ${yr}`}
                 galleries={grouped[yr] || []}
-                selectedId={selectedGallery?.id}
-                onSelect={loadGalleryPhotos}
+                selectedId={selectedGallery?._isAdmin ? null : selectedGallery?.id}
+                onSelect={loadWPGallery}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Lightbox */}
       {lightboxIndex !== null && photos.length > 0 && (
         <Lightbox
           photos={photos}

@@ -60,10 +60,19 @@ export default function Activities() {
   const [error, setError]           = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/activities')
-      .then(r => r.json())
-      .then(data => { setActivities(data); setLoading(false) })
-      .catch(() => { setError('Could not load activities.'); setLoading(false) })
+    // Fetch admin activities + WordPress activities in parallel
+    Promise.all([
+      fetch('http://localhost:5000/api/public-activities').then(r => r.json()).catch(() => []),
+      fetch('http://localhost:5000/api/activities').then(r => r.json()).catch(() => []),
+    ]).then(([adminData, wpData]) => {
+      const adminList = Array.isArray(adminData) ? adminData.map(a => ({
+        ...a,
+        image: a.image_path ? `http://localhost:5000${a.image_path}` : '',
+      })) : []
+      const wpList = Array.isArray(wpData) ? wpData : []
+      setActivities([...adminList, ...wpList])
+      setLoading(false)
+    }).catch(() => { setError('Could not load activities.'); setLoading(false) })
   }, [])
 
   return (
